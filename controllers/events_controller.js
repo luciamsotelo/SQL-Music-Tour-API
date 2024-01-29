@@ -1,3 +1,4 @@
+// folder is controllers -file is events_controller.js
 // DEPENDENCIES
 const events = require('express').Router();
 const db = require('../models');
