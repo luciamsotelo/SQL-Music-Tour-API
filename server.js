@@ -28,3 +28,5 @@ app.use('/stages', stagesController);
 app.listen(process.env.PORT, () => {
     console.log(`🎸 Rockin' on port: ${process.env.PORT}`);
 });
+
+// added data in pgAdmin using postman
