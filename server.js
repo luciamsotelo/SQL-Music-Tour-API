@@ -9,23 +9,16 @@ require('dotenv').config()
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-// SEQUELIZE CONNECTION removed per instructions on lesson 3
-// const sequelize = new Sequelize(process.env.PG_URI);
-// sequelize
-//     .authenticate()
-//     .then(() => {
-//         console.log('Connected with Sequelize');
-//     })
-//     .catch((err) => {
-//         console.log(`Unable to connect to PG: ${err}`);
-//     });
-
 // ROOT
 app.get('/', (req, res) => {
     res.status(200).json({
         message: 'Welcome to the Tour API'
     })
 })
+
+// CONTROLLERS
+const bandsController = require('./controllers/bands_controller')
+app.use('/bands', bandsController)
 
 // LISTEN
 app.listen(process.env.PORT, () => {
