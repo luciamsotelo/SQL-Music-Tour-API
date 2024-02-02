@@ -1,7 +1,8 @@
+// FOLDER - controllers - FILE - bands_controller.js
 // DEPENDENCIES
 const bands = require('express').Router()
 const db = require('../models')
-const { Band, Meet_Greet, Event, SetTime } = db
+const { Band, Meet_Greet, Event, Set_Time } = db
 const { Op } = require('sequelize')
 
 
@@ -25,26 +26,32 @@ bands.get('/:name', async (req, res) => {
     try {
         const foundBand = await Band.findOne({
             where: { name: req.params.name },
-            include: [
-                { 
-                    model: Meet_Greet, 
-                    as: "meet_greets", 
-                    include: { 
-                        model: Event, 
-                        as: "meet_greet_event",
-                        where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%`} }
-                    }     
-                },
-                {
-                    model: SetTime,
-                    as: "set_times",
-                    include: { 
-                        model: Event, 
-                        as: "set_time_event",
-                        where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%`} } 
-                    }
-                }
-            ]
+            // include: [
+            //     { 
+            //         model: Meet_Greet, 
+            //         as: "meet_greets", 
+            //         attributes: { exclude: ["band_id", "event_id"]},
+            //         include: { 
+            //             model: Event, 
+            //             as: "event",
+            //             where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%`} }
+            //         }     
+            //     },
+            //     {
+            //         model: Set_Time,
+            //         as: "set_times",
+            //         attributes: { exclude: ["band_id", "event_id"]},
+            //         include: { 
+            //             model: Event, 
+            //             as: "event",
+            //             where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%`} } 
+            //         }
+            //     }
+            // ],
+            // order: [
+            //     [{ model: Meet_Greet, as:"meet_greets"}, {model: Event, as: "event"}, 'date', 'DESC'],
+            //     [{ model: Set_Time, as: 'set_times' }, { model: Event, as: "event" }, 'date', 'DESC']
+            // ]
         });
         res.status(200).json(foundBand);
     } catch (error) {
@@ -52,8 +59,6 @@ bands.get('/:name', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
-
-
 
 // CREATE A BAND -- CREATE ROUTE
 bands.post('/', async (req, res) => {

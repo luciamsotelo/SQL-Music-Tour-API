@@ -1,10 +1,11 @@
+// FOLDER - models- FILE - bands.js
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class Band extends Model {
-        static associate({ MeetGreet, SetTime }) {
+        static associate({ Meet_Greet, SetTime }) {
             // MEET AND GREETS
-            Band.hasMany(MeetGreet, {
+            Band.hasMany(Meet_Greet, {
                 foreignKey: "band_id",
                 as: "meet_greets",
             });

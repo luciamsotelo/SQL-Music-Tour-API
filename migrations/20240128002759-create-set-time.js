@@ -1,3 +1,4 @@
+// FOLDER - migration- FILE - create-set_time.js
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
