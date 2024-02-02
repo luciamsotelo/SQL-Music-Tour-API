@@ -24,6 +24,7 @@ stages.get('/:id', async (req, res) => {
     try {
         const foundStage = await Stage.findOne({
             where: { stage_id: req.params.id },
+    
         });
         res.status(200).json(foundStage);
     } catch (error) {

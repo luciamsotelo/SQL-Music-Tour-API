@@ -1,8 +1,9 @@
 // DEPENDENCIES
 const bands = require('express').Router()
 const db = require('../models')
-const { Band } = db
+const { Band, Meet_Greet, Event, SetTime } = db
 const { Op } = require('sequelize')
+
 
 // FIND ALL BANDS -- INDEX ROUTE
 bands.get('/', async (req, res) => {
@@ -20,16 +21,39 @@ bands.get('/', async (req, res) => {
 })
 
 // FIND A SPECIFIC BAND --SHOW ROUTE
-bands.get ('/:id', async (req, res) => {
+bands.get('/:name', async (req, res) => {
     try {
         const foundBand = await Band.findOne({
-            where: { band_id: req.params.id }
-        })
-        res.status(200).json(foundBand)
+            where: { name: req.params.name },
+            include: [
+                { 
+                    model: Meet_Greet, 
+                    as: "meet_greets", 
+                    include: { 
+                        model: Event, 
+                        as: "meet_greet_event",
+                        where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%`} }
+                    }     
+                },
+                {
+                    model: SetTime,
+                    as: "set_times",
+                    include: { 
+                        model: Event, 
+                        as: "set_time_event",
+                        where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%`} } 
+                    }
+                }
+            ]
+        });
+        res.status(200).json(foundBand);
     } catch (error) {
-        res.status(500).json(error)
+        console.error('Error in bands route:', error);
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
-})
+});
+
+
 
 // CREATE A BAND -- CREATE ROUTE
 bands.post('/', async (req, res) => {
